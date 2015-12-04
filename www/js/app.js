@@ -19,7 +19,21 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+    // Load default settings and variables
+    $localStorage.$default({
+      'accounts':   [],
+      'cores':      {},
+      'sparkData':  {},
+      'listeners':  {},
+      'events':     [],
+      'settings': {
+
+      }
+    });
+
   });
+
+
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -80,4 +94,14 @@ angular.module('starter', ['ionic', 'starter.controllers'])
   //$urlRouterProvider.otherwise('/app/playlists');
 
   $urlRouterProvider.otherwise('/app/dash');
+});
+
+var app = angular.module('spark', ['ngResource']);
+
+app.factory("light", function($resource) {
+  return $resource("https://api.spark.io/v1/devices/51ff70065082554913470887/light?access_token=[redacted]");
+});
+
+app.controller('MainCtrl', function($scope, light) {
+    $scope.conditions = light.get();
 });
